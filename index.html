@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Creando Ilusiones — Amigurumis hechos a mano</title>
+<meta name="description" content="Galería de amigurumis de Creando Ilusiones, tejidos a mano, uno a uno, con aguja y mucho hilo.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="eyebrow">Aguja, hilo y mucha paciencia</div>
+  <h1 class="site-title">Creando <em>Ilusiones</em></h1>
+  <p class="subtitle">Amigurumis tejidos punto a punto, a mano. Aquí voy guardando los que ya tienen su primera foto.</p>
+  <div class="socials">
+    <a href="https://www.instagram.com/creando_ilusiones__/" target="_blank" rel="noopener">Instagram</a>
+    <span class="dot">·</span>
+    <a href="https://www.youtube.com/@CreandoIlusiones-s4o8j" target="_blank" rel="noopener">YouTube</a>
+    <span class="dot">·</span>
+    <a href="https://www.tiktok.com/@creando.ilusiones0" target="_blank" rel="noopener">TikTok</a>
+  </div>
+  <div class="thread-divider"></div>
+</header>
+
+<main class="gallery">
+  <div id="grid" class="grid"></div>
+  <div id="empty" class="empty" style="display:none">
+    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="32" r="26" stroke="#4f9bab" stroke-width="3" stroke-dasharray="4 6"/>
+      <path d="M20 32c4-10 20-10 24 0" stroke="#e2604a" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+    <p>Todavía no hay amigurumis por aquí.<br>¡Las primeras fotos están al caer!</p>
+  </div>
+</main>
+
+<footer>
+  Creando Ilusiones · hecho a mano ·
+  <a href="https://www.instagram.com/creando_ilusiones__/" target="_blank" rel="noopener">Instagram</a> ·
+  <a href="https://www.youtube.com/@CreandoIlusiones-s4o8j" target="_blank" rel="noopener">YouTube</a> ·
+  <a href="https://www.tiktok.com/@creando.ilusiones0" target="_blank" rel="noopener">TikTok</a>
+</footer>
+
+<a class="whatsapp-float" href="https://wa.me/34600697873?text=Hola%2C%20he%20visto%20tus%20amigurumis%20y%20quer%C3%ADa%20preguntarte%20por..." target="_blank" rel="noopener" aria-label="Escríbeme por WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="white">
+    <path d="M17.6 6.4A8.8 8.8 0 0 0 3.7 16.9L2.5 21.5l4.7-1.2A8.8 8.8 0 0 0 17.6 6.4Zm-5.6 14a7.3 7.3 0 0 1-3.7-1l-.27-.16-2.8.73.75-2.73-.18-.28a7.3 7.3 0 1 1 13.6-3.76A7.32 7.32 0 0 1 12 20.4Zm4-5.47c-.22-.11-1.3-.64-1.5-.72-.2-.07-.35-.11-.5.11s-.57.72-.7.87-.26.17-.48.06a6 6 0 0 1-1.77-1.09 6.6 6.6 0 0 1-1.23-1.53c-.13-.22 0-.34.1-.45s.22-.26.33-.39a1.5 1.5 0 0 0 .22-.37.4.4 0 0 0 0-.39c-.06-.11-.5-1.2-.68-1.65-.18-.43-.36-.37-.5-.38h-.43a.82.82 0 0 0-.59.28 2.5 2.5 0 0 0-.78 1.86 4.35 4.35 0 0 0 .91 2.3 9.9 9.9 0 0 0 3.8 3.36c.53.23.94.36 1.26.46a3 3 0 0 0 1.4.09 2.3 2.3 0 0 0 1.5-1.06 1.9 1.9 0 0 0 .13-1.06c-.06-.1-.2-.15-.42-.26Z"/>
+  </svg>
+  <span>Pregúntame por WhatsApp</span>
+</a>
+
+<script>
+async function cargarGaleria(){
+  const grid = document.getElementById('grid');
+  const empty = document.getElementById('empty');
+  try{
+    const res = await fetch('amigurumis.json', {cache:'no-store'});
+    const items = await res.json();
+    if(!items || items.length === 0){
+      empty.style.display = 'block';
+      return;
+    }
+    grid.innerHTML = items.map(item => `
+      <article class="card">
+        <div class="photo-frame">
+          <div class="ring">
+            <img src="${item.foto}" alt="${item.nombre}" loading="lazy">
+          </div>
+        </div>
+        <div class="card-body">
+          <h3>${item.nombre}</h3>
+          ${item.descripcion ? `<p>${item.descripcion}</p>` : ''}
+          ${item.fecha ? `<div class="fecha">${item.fecha}</div>` : ''}
+        </div>
+      </article>
+    `).join('');
+  }catch(e){
+    empty.style.display = 'block';
+    empty.querySelector('p').textContent = 'No se ha podido cargar la galería ahora mismo.';
+  }
+}
+cargarGaleria();
+</script>
+
+</body>
+</html>
